@@ -56,8 +56,8 @@ int32_t find_max(const int32_t *arr, size_t size) {
 }
 
 int find_binary_search(const int32_t *arr, size_t size, int32_t target) {
-    // Preconditions
-    __CPROVER_assert(arr != NULL || size == 0, "array must not be NULL if size > 0");
+    // Preconditions: If size > 0, then arr must not be NULL
+    __CPROVER_assert(size == 0 || arr != NULL, "array must not be NULL if size > 0");
     
     if (size == 0) {
         return -1;

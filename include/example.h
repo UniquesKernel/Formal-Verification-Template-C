@@ -38,7 +38,7 @@ int32_t find_max(const int32_t *arr, size_t size);
  * @param target Value to search for
  * @return Index of target if found, -1 otherwise
  * 
- * @pre arr != NULL && size >= 0
+ * @pre size == 0 || arr != NULL
  * @pre Array is sorted in ascending order
  * @post If return value >= 0, then arr[return value] == target
  * @post If return value == -1, then target is not in the array
