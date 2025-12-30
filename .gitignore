@@ -77,3 +77,6 @@ cbmc-output/
 test-results/
 *.log
 test_runner
+
+# CodeQL
+_codeql_detected_source_root
