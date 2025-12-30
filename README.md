@@ -39,6 +39,8 @@ brew install cbmc
 
 Click the "Use this template" button on GitHub to create your own repository from this template.
 
+**New to template repositories?** See our [detailed guide on using this template](docs/USING_TEMPLATE.md).
+
 ### 2. Clone Your Repository
 
 ```bash
@@ -123,6 +125,7 @@ All functions include:
 
 ## 📖 Documentation
 
+- **[Using This Template](docs/USING_TEMPLATE.md)** - Step-by-step guide to customize this template
 - **[Getting Started Guide](docs/GETTING_STARTED.md)** - Comprehensive introduction to formal verification
 - **[Examples README](examples/README.md)** - How to write and run verification harnesses
 - **[Source Code](src/example.c)** - Annotated examples with best practices
