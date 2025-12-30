@@ -21,6 +21,7 @@ option(ANVIL_ENABLE_LTO "Enable Link Time Optimization" ON)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(CompilerStandards)
+include(Functions)
 
 # Configure sanitizers (set as variables for use in Functions.cmake)
 if(ANVIL_ENABLE_ASAN)
@@ -71,3 +72,8 @@ if(ANVIL_BUILD_TESTS)
       endif()
     endif()
 endif()
+
+# Creating an Example Executable - this would be replaced with your build instructions
+add_executable(example src/main.c)
+target_include_directories(example PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set_compiler_options(example)
