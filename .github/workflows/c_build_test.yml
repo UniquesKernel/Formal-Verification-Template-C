@@ -1,0 +1,193 @@
+name: C Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - '**.c'
+      - '**.h'
+      - 'CMakeLists.txt'
+      - 'cmake/**'
+      - '.github/workflows/c_build_test.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - '**.c'
+      - '**.h'
+      - 'CMakeLists.txt'
+      - 'cmake/**'
+      - '.github/workflows/c_build_test.yml'
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.os }} - ${{ matrix.build_type }}
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        build_type: [Debug, Release]
+        include:
+          # Add specific compiler versions if needed
+          - os: ubuntu-latest
+            cc: gcc
+            cxx: g++
+          - os: macos-latest
+            cc: clang
+            cxx: clang++
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential
+
+      - name: Install Dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install cmake
+
+      - name: Configure CMake
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DANVIL_BUILD_TESTS=ON \
+            -DANVIL_ENABLE_LTO=ON
+
+      - name: Build
+        run: cmake --build build --config ${{ matrix.build_type }} -j$(nproc 2>/dev/null || sysctl -n hw.ncpu)
+
+      - name: Run Tests
+        working-directory: build
+        run: ctest --output-on-failure --build-config ${{ matrix.build_type }}
+
+  sanitizers:
+    name: Sanitizers - ${{ matrix.sanitizer }}
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        sanitizer: [asan, ubsan]
+        include:
+          - sanitizer: asan
+            cmake_flag: ANVIL_ENABLE_ASAN
+            cc: gcc
+            cxx: g++
+          - sanitizer: ubsan
+            cmake_flag: ANVIL_ENABLE_UBSAN
+            cc: gcc
+            cxx: g++
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential
+
+      - name: Configure CMake with ${{ matrix.sanitizer }}
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DANVIL_BUILD_TESTS=ON \
+            -D${{ matrix.cmake_flag }}=ON
+
+      - name: Build
+        run: cmake --build build -j$(nproc)
+
+      - name: Run Tests with ${{ matrix.sanitizer }}
+        working-directory: build
+        run: ctest --output-on-failure
+
+  valgrind:
+    name: Valgrind Memory Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential valgrind
+
+      - name: Configure CMake
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DANVIL_BUILD_TESTS=ON \
+            -DANVIL_ENABLE_VALGRIND=ON
+
+      - name: Build
+        run: cmake --build build -j$(nproc)
+
+      - name: Run Tests with Valgrind
+        working-directory: build
+        run: ctest --output-on-failure -T memcheck
+
+      - name: Upload Valgrind Results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: valgrind-results
+          path: build/Testing/Temporary/MemoryChecker.*.log
+
+  coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential gcovr lcov
+
+      - name: Configure CMake with Coverage
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DANVIL_BUILD_TESTS=ON \
+            -DANVIL_ENABLE_COVERAGE=ON
+
+      - name: Build
+        run: cmake --build build -j$(nproc)
+
+      - name: Run Tests
+        working-directory: build
+        run: ctest --output-on-failure
+
+      - name: Generate Coverage Report
+        working-directory: build
+        run: |
+          gcovr -r .. --html --html-details -o coverage.html
+          gcovr -r .. --xml -o coverage.xml
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            build/coverage.html
+            build/coverage.xml
+
+      - name: Upload Coverage to Codecov (Optional)
+        if: github.event_name == 'push'
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./build/coverage.xml
+          fail_ci_if_error: false
