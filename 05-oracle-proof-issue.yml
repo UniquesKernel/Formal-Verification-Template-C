@@ -1,0 +1,106 @@
+name: 🔬 Oracle/Proof Issue (Advanced)
+description: Report issues with the Lean specifications or proofs (for contributors working with formal verification)
+labels: ["lean", "verification", "needs-investigation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **This template is for contributors working with the Lean verification code.**
+        
+        If you're experiencing a bug with the C library and haven't examined the Lean code,
+        please use the "Bug Report" template instead.
+
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: Issue Type
+      description: What kind of verification issue is this?
+      options:
+        - Specification issue (oracle behavior incorrect)
+        - Proof issue (proof doesn't compile or is incorrect)
+        - Property test issue (property incorrectly specified)
+        - FFI binding issue
+        - Documentation issue
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: affected-code
+    attributes:
+      label: Affected Specification/Proof
+      description: Which Lean file and definition is affected?
+      placeholder: |
+        File: lean/AnvilVerification/Specs.lean
+        Definition: my_function_oracle
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue Description
+      description: Describe the problem with the specification or proof
+      placeholder: "The oracle for my_function doesn't handle edge case..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current Behavior
+      description: What is the current behavior of the oracle/proof?
+      placeholder: |
+        ```lean
+        -- Current definition
+        def my_function_oracle (x : Nat) : Nat :=
+          x + 1
+        ```
+      render: lean
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What should the correct behavior be?
+      placeholder: |
+        ```lean
+        -- Corrected definition
+        def my_function_oracle (x : Nat) : Nat :=
+          if x == 0 then 0 else x + 1
+        ```
+      render: lean
+    validations:
+      required: false
+
+  - type: textarea
+    id: suggested-fix
+    attributes:
+      label: Suggested Fix (Optional)
+      description: If you have a fix in mind, share it here
+      placeholder: |
+        ```lean
+        -- Proposed changes
+        ```
+      render: lean
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Would you be willing to contribute a fix?
+      options:
+        - label: I would be willing to submit a PR for this fix
+          required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other relevant information
+    validations:
+      required: false

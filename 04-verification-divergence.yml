@@ -1,0 +1,85 @@
+name: ⚠️ Verification Divergence (Advanced)
+description: C implementation doesn't match verified oracle (for contributors familiar with verification internals)
+labels: ["verification", "critical", "needs-investigation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **This template is for contributors who have examined the verification code.**
+        
+        If you're experiencing a bug with the C library and haven't looked at the Lean code, 
+        please use the "Bug Report" template instead.
+
+  - type: textarea
+    id: property-test
+    attributes:
+      label: Failed Property Test
+      description: Which property test is failing?
+      placeholder: "Property: prop_my_function_correctness"
+    validations:
+      required: true
+
+  - type: textarea
+    id: counterexample
+    attributes:
+      label: SlimCheck Counter-Example
+      description: Paste the counter-example produced by SlimCheck
+      placeholder: |
+        Counter-example found:
+        Input: ...
+        Oracle output: ...
+        C implementation output: ...
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: oracle-behavior
+    attributes:
+      label: Oracle Behavior
+      description: What does the verified oracle return for this input?
+      placeholder: "The oracle (in lean/AnvilVerification/Specs.lean) returns..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: c-behavior
+    attributes:
+      label: C Implementation Behavior
+      description: What does the C implementation return?
+      placeholder: "The C implementation returns..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal Reproduction
+      description: Provide minimal code to reproduce the divergence
+      placeholder: |
+        ```c
+        // C code
+        ```
+        
+        ```lean
+        -- Lean code
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: analysis
+    attributes:
+      label: Your Analysis (Optional)
+      description: If you've investigated, share your findings
+      placeholder: "I believe the issue is in..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other relevant information
+    validations:
+      required: false
