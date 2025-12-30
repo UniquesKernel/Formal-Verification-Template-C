@@ -1,0 +1,20 @@
+name = "anvil-verification"
+version = "0.1.0"
+defaultTargets = ["anvil-verification"]
+
+[[lean_lib]]
+name = "AnvilVerification"
+
+[[lean_exe]]
+name = "anvil-verification"
+root = "Main"
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+revisition = "stable"
+
+[[require]]
+name = "plausible"
+scope = "leanprover-community"
+revisition = "stable"

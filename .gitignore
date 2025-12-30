@@ -1,0 +1,49 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.nfs*
+.vscode/
+.idea/
+
+# Build output
+build/
+build-*/
+cmake-build-*/
+out/
+dist/
+tmp/
+.cache/
+*.log
+*.pid
+
+# CMake-generated files
+**/CMakeFiles/
+**/CMakeCache.txt
+**/cmake_install.cmake
+**/CTestTestfile.cmake
+
+# Compiled objects and binaries
+*.o
+*.obj
+*.lo
+*.la
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+*.pdb
+*.dSYM/
+
+# Lean / Lake
+**/.lake/
+**/lake-packages/
+**/lean_packages/
+*.olean
+.elan/
