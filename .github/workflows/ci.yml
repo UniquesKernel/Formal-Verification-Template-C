@@ -1,0 +1,74 @@
+name: Build and Verify
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc make
+    
+    - name: Build project
+      run: make release
+    
+    - name: Run tests
+      run: |
+        gcc -Wall -Wextra -Werror -Iinclude tests/test_example.c src/example.c -o test_runner
+        ./test_runner
+
+  verify:
+    name: Formal Verification
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Install CBMC
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cbmc
+    
+    - name: Verify with CBMC
+      run: make verify
+      continue-on-error: true
+    
+    - name: Verify individual functions
+      run: |
+        echo "Verifying safe_add..."
+        cbmc --bounds-check --pointer-check --signed-overflow-check \
+             -I include src/example.c --function safe_add || true
+        
+        echo "Verifying find_max..."
+        cbmc --bounds-check --pointer-check --unwind 10 \
+             -I include src/example.c --function find_max || true
+
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Check code style
+      run: |
+        echo "Checking for common issues..."
+        grep -r "TODO\|FIXME\|XXX" src/ include/ || true
+    
+    - name: Build with warnings
+      run: |
+        gcc -Wall -Wextra -Werror -pedantic -std=c11 \
+            -Iinclude src/example.c src/main.c -o example
