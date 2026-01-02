@@ -4,6 +4,17 @@ function(set_compiler_options project_name)
     -Wformat
     -Wformat-security
     -Werror=format-security
+    -Werror=implicit-function-declaration
+    -Wstrict-prototypes 
+    -Wmissing-prototypes 
+    -Wold-style-definition
+    -Wsign-conversion
+    -Wcast-align
+    -Wcast-qual
+    -Wdouble-promotion 
+    -Wfloat-equal
+    -fno-strict-aliasing
+    -Wundef
     -Wall
     -Wextra
     -Werror
@@ -11,6 +22,7 @@ function(set_compiler_options project_name)
     -Wconversion
     -Wshadow
     -fno-plt
+    -fPIC
   )
 
   # Add optimization flags based on build type and coverage

@@ -1,6 +1,9 @@
 name = "anvil-verification"
 version = "0.1.0"
 defaultTargets = ["anvil-verification"]
+moreLinkArgs = ["-L/home/woutan/template/build", "-lexample_lib",   "-Wl,-rpath,/home/woutan/template/build"]
+precompileModules = true
+supportInterpreter = true
 
 [[lean_lib]]
 name = "AnvilVerification"
@@ -12,9 +15,9 @@ root = "Main"
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
-revisition = "stable"
+revision = "stable"
 
 [[require]]
 name = "plausible"
 scope = "leanprover-community"
-revisition = "stable"
+revision = "stable"

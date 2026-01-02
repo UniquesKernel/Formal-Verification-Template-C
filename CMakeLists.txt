@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 
 project(Project_Name VERSION 0.1.0 
-  LANGUAGES ASM C
+  LANGUAGES ASM C CXX
   DESCRIPTION "A Project Template for writing verified C code"
 )
 
@@ -74,6 +74,10 @@ if(ANVIL_BUILD_TESTS)
 endif()
 
 # Creating an Example Executable - this would be replaced with your build instructions
-add_executable(example src/main.c)
+add_executable(example src/main.c src/example.c)
 target_include_directories(example PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set_compiler_options(example)
+
+add_library(example_lib SHARED src/example.c)
+target_include_directories(example_lib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set_compiler_options(example_lib)

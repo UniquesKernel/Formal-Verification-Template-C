@@ -1,10 +1,8 @@
 #ifndef EXAMPLE_H
 #define EXAMPLE_H
 
-#include <stdio.h>
+#include <stdint.h>
 
-void print() {
-    printf("Hello, World!");
-}
+uint32_t add(uint32_t a, uint32_t b);
 
 #endif // EXAMPLE_H
