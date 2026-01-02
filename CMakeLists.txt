@@ -74,10 +74,10 @@ if(ANVIL_BUILD_TESTS)
 endif()
 
 # Creating an Example Executable - this would be replaced with your build instructions
-add_executable(example src/main.c src/example.c)
+add_executable(example src/main.c src/example.c src/multiply.cpp)
 target_include_directories(example PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set_compiler_options(example)
 
-add_library(example_lib SHARED src/example.c)
+add_library(example_lib SHARED src/example.c src/multiply.cpp)
 target_include_directories(example_lib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set_compiler_options(example_lib)

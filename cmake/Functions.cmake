@@ -1,13 +1,10 @@
 function(set_compiler_options project_name)
-  set(COMPILER_FLAGS
+  # Common flags for both C and C++
+  set(COMMON_FLAGS
     -Wattributes
     -Wformat
     -Wformat-security
     -Werror=format-security
-    -Werror=implicit-function-declaration
-    -Wstrict-prototypes 
-    -Wmissing-prototypes 
-    -Wold-style-definition
     -Wsign-conversion
     -Wcast-align
     -Wcast-qual
@@ -24,6 +21,17 @@ function(set_compiler_options project_name)
     -fno-plt
     -fPIC
   )
+
+  # C-specific flags
+  set(C_ONLY_FLAGS
+    -Werror=implicit-function-declaration
+    -Wstrict-prototypes 
+    -Wmissing-prototypes 
+    -Wold-style-definition
+  )
+
+  # Combine for the final compiler flags
+  set(COMPILER_FLAGS ${COMMON_FLAGS})
 
   # Add optimization flags based on build type and coverage
   if(DEFINED COVERAGE_FLAGS)
@@ -60,7 +68,13 @@ function(set_compiler_options project_name)
     endif()
   endif()
 
+  # Apply common flags to all languages
   target_compile_options(${project_name} PRIVATE ${COMPILER_FLAGS})
+  
+  # Apply C-specific flags only to C source files
+  target_compile_options(${project_name} PRIVATE 
+    $<$<COMPILE_LANGUAGE:C>:${C_ONLY_FLAGS}>
+  )
   
   # Add linker flags for sanitizers and coverage
   if(DEFINED SANITIZER_LINK_FLAGS)
