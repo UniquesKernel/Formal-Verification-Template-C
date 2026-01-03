@@ -1,31 +1,70 @@
 #!/bin/bash
-mkdir $1
-mkdir $1/00-DocumentSettings
-mkdir $1/01-FrontMatter
-mkdir $1/02-Body
-mkdir $1/03-EndMatter
+set -euo pipefail
 
-pushd ~/LinuxSetup >/dev/null
-# find the git root
-gitroot=$(git rev-parse --show-toplevel)
-gitrootToSnippet=${gitroot}/docs/docs-gen/snippet
-popd >/dev/null
-echo $gitrootToSnippet
+# Validate input arguments
+if [[ $# -lt 2 ]]; then
+    echo "Error: Missing required arguments" >&2
+    echo "Usage: $0 <output_directory> <document_name>" >&2
+    exit 1
+fi
+
+output_dir="$1"
+doc_name="$2"
+
+# Check if output directory already exists
+if [[ -e "$output_dir" ]]; then
+    echo "Error: Output directory '$output_dir' already exists" >&2
+    exit 1
+fi
+
+# Create directory structure
+mkdir -p "$output_dir"/{00-DocumentSettings,01-FrontMatter,02-Body,03-EndMatter}
+
+# Find the git root from the current script location
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if ! gitroot=$(cd "$script_dir" && git rev-parse --show-toplevel 2>/dev/null); then
+    echo "Error: Script is not in a git repository" >&2
+    exit 1
+fi
+
+gitrootToSnippet="${gitroot}/docs/docs-gen/latex/snippet"
+
+# Verify snippet directory exists
+if [[ ! -d "$gitrootToSnippet" ]]; then
+    echo "Error: Snippet directory not found at $gitrootToSnippet" >&2
+    exit 1
+fi
+
+echo "Using snippet directory: $gitrootToSnippet"
 tree .
 
-cp ${gitrootToSnippet}/tikz-uml.sty ./$1/tikz-uml.sty
-cp ${gitrootToSnippet}/Latex.tex ./$1/$2.tex
-cp ${gitrootToSnippet}/Preamble.tex ./$1/00-DocumentSettings/Preamble.tex
-cp ${gitrootToSnippet}/PreTitle.tex ./$1/00-DocumentSettings/PreTitle.tex
-cp ${gitrootToSnippet}/Definitions.tex ./$1/00-DocumentSettings/Definitions.tex
+# Define file mappings (source -> destination)
+declare -A file_map=(
+    ["Latex.tex"]="${output_dir}/${doc_name}.tex"
+    ["Preamble.tex"]="${output_dir}/00-DocumentSettings/Preamble.tex"
+    ["PreTitle.tex"]="${output_dir}/00-DocumentSettings/PreTitle.tex"
+    ["Definitions.tex"]="${output_dir}/00-DocumentSettings/Definitions.tex"
+    ["Abstract.tex"]="${output_dir}/01-FrontMatter/Abstract.tex"
+    ["Title.tex"]="${output_dir}/01-FrontMatter/Title.tex"
+    ["TOC.tex"]="${output_dir}/01-FrontMatter/TOC.tex"
+    ["FrontMatter.tex"]="${output_dir}/01-FrontMatter/FrontMatter.tex"
+    ["Body.tex"]="${output_dir}/02-Body/Body.tex"
+    ["EndMatter.tex"]="${output_dir}/03-EndMatter/EndMatter.tex"
+    ["References.tex"]="${output_dir}/03-EndMatter/References.tex"
+    ["References.bib"]="${output_dir}/03-EndMatter/References.bib"
+)
 
-cp ${gitrootToSnippet}/Abstract.tex ./$1/01-FrontMatter/Abstract.tex
-cp ${gitrootToSnippet}/Title.tex ./$1/01-FrontMatter/Title.tex
-cp ${gitrootToSnippet}/TOC.tex ./$1/01-FrontMatter/TOC.tex
-cp ${gitrootToSnippet}/FrontMatter.tex ./$1/01-FrontMatter/FrontMatter.tex
+# Copy files with error checking
+for src_file in "${!file_map[@]}"; do
+    src_path="${gitrootToSnippet}/${src_file}"
+    dst_path="${file_map[$src_file]}"
+    
+    if [[ ! -f "$src_path" ]]; then
+        echo "Error: Source file not found: $src_path" >&2
+        exit 1
+    fi
+    
+    cp "$src_path" "$dst_path"
+done
 
-cp ${gitrootToSnippet}/Body.tex ./$1/02-Body/Body.tex
-
-cp ${gitrootToSnippet}/EndMatter.tex ./$1/03-EndMatter/EndMatter.tex
-cp ${gitrootToSnippet}/References.tex ./$1/03-EndMatter/References.tex
-cp ${gitrootToSnippet}/References.bib ./$1/03-EndMatter/References.bib
+echo "LaTeX project created successfully at $output_dir"
