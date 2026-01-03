@@ -1,9 +1,0 @@
-        -:    0:Source:/home/woutan/template/src/example.c
-        -:    0:Graph:CMakeFiles/example.dir/src/example.c.gcno
-        -:    0:Data:CMakeFiles/example.dir/src/example.c.gcda
-        -:    0:Runs:1
-        -:    1:#include "example.h"
-        -:    2:
-        1:    3:uint32_t add(uint32_t a, uint32_t b) {
-        1:    4:    return a + b;
-        -:    5:}
