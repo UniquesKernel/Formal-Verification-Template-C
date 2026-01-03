@@ -119,10 +119,10 @@ The template includes a setup script to help you create a new Lean project with 
 rm -rf lean/
 
 # Create your own project (defaults to 'lean' folder)
-./scripts/setup_lean.sh my_project
+./scripts/create_lean_project.sh my_project
 
 # Or specify a custom folder
-./scripts/setup_lean.sh my_project my_lean_folder
+./scripts/create_lean_project.sh my_project my_lean_folder
 
 # Then configure dependencies and FFI linking
 cd lean  # or your custom folder

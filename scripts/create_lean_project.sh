@@ -23,15 +23,15 @@ echo ""
 
 # Check if project name is provided
 if [ $# -eq 0 ]; then
-    echo "Usage: ./setup_lean.sh <project-name> [root-folder]"
+    echo "Usage: ./create_lean_project.sh <project-name> [root-folder]"
     echo ""
     echo "Arguments:"
     echo "  <project-name>   Name of the Lean project to create (required)"
     echo "  [root-folder]    Root folder for projects (optional, defaults to 'lean')"
     echo ""
     echo "Examples:"
-    echo "  ./setup_lean.sh my_project"
-    echo "  ./setup_lean.sh my_project lean_projects"
+    echo "  ./create_lean_project.sh my_project"
+    echo "  ./create_lean_project.sh my_project lean_projects"
     exit 1
 fi
 
