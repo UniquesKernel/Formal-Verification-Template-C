@@ -1,0 +1,82 @@
+name: Build and Verify
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Ubuntu with GCC
+          - os: ubuntu-24.04
+            compiler: gcc
+            cc: gcc
+            cxx: g++
+          - os: ubuntu-22.04
+            compiler: gcc
+            cc: gcc
+            cxx: g++
+          # Ubuntu with Clang
+          - os: ubuntu-24.04
+            compiler: clang
+            cc: clang
+            cxx: clang++
+          - os: ubuntu-22.04
+            compiler: clang
+            cc: clang
+            cxx: clang++
+          # macOS with Clang
+          - os: macos-latest
+            compiler: clang
+            cc: clang
+            cxx: clang++
+          # macOS with GCC (via homebrew)
+          - os: macos-latest
+            compiler: gcc
+            cc: gcc-13
+            cxx: g++-13
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies (Ubuntu)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake build-essential
+        if [ "${{ matrix.compiler }}" = "clang" ]; then
+          sudo apt-get install -y clang
+        fi
+
+    - name: Install dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        brew update
+        brew install cmake
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          brew install gcc@13
+        fi
+
+    - name: Install Lean and elan
+      run: |
+        curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -s -- -y
+        source $HOME/.elan/env
+        echo "$HOME/.elan/bin" >> $GITHUB_PATH
+        lean --version
+        lake --version
+
+    - name: Build and test (Release)
+      env:
+        CC: ${{ matrix.cc }}
+        CXX: ${{ matrix.cxx }}
+      run: make release test
+
+    - name: Run differential tests with Lean
+      run: cd lean && lake build

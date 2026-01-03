@@ -1,7 +1,11 @@
 name = "project-verification"
 version = "0.1.0"
 defaultTargets = ["project-verification"]
-moreLinkArgs = ["-L/home/woutan/template/build", "-lexample_lib",   "-Wl,-rpath,/home/woutan/template/build"]
+moreLinkArgs = [
+    "-L./../build",
+    "-lexample_lib",
+    "-Wl,-rpath,./../build"
+]
 precompileModules = true
 supportInterpreter = true
 

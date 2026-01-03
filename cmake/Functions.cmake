@@ -55,7 +55,8 @@ function(set_compiler_options project_name)
 
   # Platform-specific flags
   if (UNIX)
-    list(APPEND COMPILER_FLAGS -fPIE -pie)
+    # Use -fPIE for compilation; add -pie only at link time to avoid clang warning
+    list(APPEND COMPILER_FLAGS -fPIE)
   endif()
 
   if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64")
@@ -85,6 +86,11 @@ function(set_compiler_options project_name)
   if(DEFINED COVERAGE_LINK_FLAGS)
     separate_arguments(COV_LINK_FLAGS UNIX_COMMAND "${COVERAGE_LINK_FLAGS}")
     target_link_options(${project_name} PRIVATE ${COV_LINK_FLAGS})
+  endif()
+
+  # Enable PIE at link time on Unix platforms
+  if(UNIX)
+    target_link_options(${project_name} PRIVATE -pie)
   endif()
 endfunction()
 
