@@ -1,0 +1,23 @@
+        -:    0:Source:/home/woutan/template/src/main.c
+        -:    0:Graph:CMakeFiles/example.dir/src/main.c.gcno
+        -:    0:Data:CMakeFiles/example.dir/src/main.c.gcda
+        -:    0:Runs:1
+        -:    1:#include "example.h"
+        -:    2:#include "multiply.hpp"
+        -:    3:#include <stdio.h>
+        -:    4:#include <stdint.h>
+        -:    5:
+        1:    6:int main() {
+        1:    7:    uint32_t a = 1;
+        1:    8:    uint32_t b = 2;
+        1:    9:    uint32_t sum = add(a, b);
+        -:   10:    
+        1:   11:    uint32_t c = 3;
+        1:   12:    uint32_t d = 4;
+        1:   13:    uint32_t product = multiply(c, d);
+        -:   14:
+        1:   15:    printf("The sum of a = 1 and b = 2 is: %u\n", sum);
+        1:   16:    printf("The product of c = 3 and d = 4 is: %u\n", product);
+        -:   17:    
+        1:   18:    return 0;
+        -:   19:}

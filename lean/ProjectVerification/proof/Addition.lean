@@ -19,7 +19,7 @@
 -- ============================================================================
 
 -- Import the specification of the addition function we're verifying
-import AnvilVerification.specs.Addition
+import ProjectVerification.specs.Addition
 
 -- Theorem: Addition is commutative (order doesn't matter)
 -- This proves that a + b = b + a for any two 32-bit unsigned integers

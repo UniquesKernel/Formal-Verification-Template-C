@@ -15,7 +15,7 @@
    "type": "git",
    "subDir": null,
    "scope": "leanprover-community",
-   "rev": "a8227f463392ef51e5bd9f68975fe46f5d9057f3",
+   "rev": "dbe24fbc3fe8ffbf4a22a23d8f205b7a53c68656",
    "name": "mathlib",
    "manifestFile": "lake-manifest.json",
    "inputRev": "master",
@@ -91,5 +91,5 @@
    "inputRev": "v4.27.0-rc1",
    "inherited": true,
    "configFile": "lakefile.toml"}],
- "name": "«anvil-verification»",
+ "name": "«project-verification»",
  "lakeDir": ".lake"}

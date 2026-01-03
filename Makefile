@@ -24,7 +24,7 @@ help:
 	@echo "Examples:"
 	@echo "  make release                    - Build optimized release"
 	@echo "  make asan test                  - Build and test with ASan"
-	@echo "  CMAKE_OPTS=\"-DANVIL_ENABLE_LTO=OFF\" make build  - Custom options"
+	@echo "  CMAKE_OPTS=\"-DPROJECT_ENABLE_LTO=OFF\" make build  - Custom options"
 
 configure:
 	@cmake -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) $(CMAKE_OPTS) .
@@ -43,16 +43,16 @@ release:
 	@$(MAKE) BUILD_TYPE=Release build
 
 asan:
-	@$(MAKE) CMAKE_OPTS="-DANVIL_ENABLE_ASAN=ON" BUILD_TYPE=Debug build
+	@$(MAKE) CMAKE_OPTS="-DPROJECT_ENABLE_ASAN=ON" BUILD_TYPE=Debug build
 
 ubsan:
-	@$(MAKE) CMAKE_OPTS="-DANVIL_ENABLE_UBSAN=ON" BUILD_TYPE=Debug build
+	@$(MAKE) CMAKE_OPTS="-DPROJECT_ENABLE_UBSAN=ON" BUILD_TYPE=Debug build
 
 coverage:
-	@$(MAKE) CMAKE_OPTS="-DANVIL_ENABLE_COVERAGE=ON" BUILD_TYPE=Debug build
+	@$(MAKE) CMAKE_OPTS="-DPROJECT_ENABLE_COVERAGE=ON" BUILD_TYPE=Debug build
 
-valgrind:
-	@$(MAKE) CMAKE_OPTS="-DANVIL_ENABLE_VALGRIND=ON" test
+valgrind: clean
+	@$(MAKE) CMAKE_OPTS="-DPROJECT_ENABLE_VALGRIND=ON -DPROJECT_ENABLE_ASAN=OFF -DPROJECT_ENABLE_UBSAN=ON -DPROJECT_ENABLE_COVERAGE=ON" BUILD_TYPE=Debug test
 
 docs:
 	@doxygen Doxyfile

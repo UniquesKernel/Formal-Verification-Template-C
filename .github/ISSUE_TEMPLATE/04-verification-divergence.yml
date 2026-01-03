@@ -38,7 +38,7 @@ body:
     attributes:
       label: Oracle Behavior
       description: What does the verified oracle return for this input?
-      placeholder: "The oracle (in lean/AnvilVerification/Specs.lean) returns..."
+      placeholder: "The oracle (in lean/ProjectVerification/Specs.lean) returns..."
     validations:
       required: true
 

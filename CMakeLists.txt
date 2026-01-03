@@ -6,45 +6,45 @@ project(Project_Name VERSION 0.1.0
 )
 
 # Testing options
-option(ANVIL_BUILD_TESTS "Build the test suite" ON)
-option(ANVIL_ENABLE_COVERAGE "Enable code coverage reporting" OFF)
+option(PROJECT_BUILD_TESTS "Build the test suite" ON)
+option(PROJECT_ENABLE_COVERAGE "Enable code coverage reporting" OFF)
 
 # Sanitizer options
-option(ANVIL_ENABLE_ASAN "Enable Address Sanitizer" OFF) # Cannot be combined with TSAN and MSAN
-option(ANVIL_ENABLE_UBSAN "Enable Undefined Behavior Sanitizer" OFF)
+option(PROJECT_ENABLE_ASAN "Enable Address Sanitizer" OFF) # Cannot be combined with TSAN and MSAN
+option(PROJECT_ENABLE_UBSAN "Enable Undefined Behavior Sanitizer" OFF)
 
 # Memory checking options
-option(ANVIL_ENABLE_VALGRIND "Enable Valgrind memory checking" OFF)
+option(PROJECT_ENABLE_VALGRIND "Enable Valgrind memory checking" OFF)
 
 # Build type options
-option(ANVIL_ENABLE_LTO "Enable Link Time Optimization" ON)
+option(PROJECT_ENABLE_LTO "Enable Link Time Optimization" ON)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(CompilerStandards)
 include(Functions)
 
 # Configure sanitizers (set as variables for use in Functions.cmake)
-if(ANVIL_ENABLE_ASAN)
+if(PROJECT_ENABLE_ASAN)
   set(SANITIZER_FLAGS "${SANITIZER_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
   set(SANITIZER_LINK_FLAGS "${SANITIZER_LINK_FLAGS} -fsanitize=address")
   message(STATUS "Address Sanitizer enabled")
 endif()
 
-if(ANVIL_ENABLE_UBSAN)
+if(PROJECT_ENABLE_UBSAN)
   set(SANITIZER_FLAGS "${SANITIZER_FLAGS} -fsanitize=undefined -fno-omit-frame-pointer")
   set(SANITIZER_LINK_FLAGS "${SANITIZER_LINK_FLAGS} -fsanitize=undefined")
   message(STATUS "Undefined Behavior Sanitizer enabled")
 endif()
 
 # Configure coverage
-if(ANVIL_ENABLE_COVERAGE)
+if(PROJECT_ENABLE_COVERAGE)
   set(COVERAGE_FLAGS "-O0 -g --coverage")
   set(COVERAGE_LINK_FLAGS "--coverage")
   message(STATUS "Code coverage enabled")
 endif()
 
 # Configure LTO/IPO
-if(ANVIL_ENABLE_LTO)
+if(PROJECT_ENABLE_LTO)
   include(CheckIPOSupported)
   check_ipo_supported(RESULT ipo_supported OUTPUT ipo_error)
   if(ipo_supported)
@@ -55,11 +55,11 @@ if(ANVIL_ENABLE_LTO)
   endif()
 endif()
 
-if(ANVIL_BUILD_TESTS)
+if(PROJECT_BUILD_TESTS)
     enable_testing()
     include(CTest)
     
-    if (ANVIL_ENABLE_VALGRIND)
+    if (PROJECT_ENABLE_VALGRIND)
       find_program(VALGRIND_EXECUTABLE valgrind)
       if(VALGRIND_EXECUTABLE)
         set(MEMORYCHECK_COMMAND ${VALGRIND_EXECUTABLE})
@@ -81,3 +81,20 @@ set_compiler_options(example)
 add_library(example_lib SHARED src/example.c src/multiply.cpp)
 target_include_directories(example_lib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set_compiler_options(example_lib)
+
+if(PROJECT_BUILD_TESTS)
+    find_program(LAKE_EXECUTABLE lake)
+    if(LAKE_EXECUTABLE)
+        if(PROJECT_ENABLE_VALGRIND AND VALGRIND_EXECUTABLE)
+            add_test(NAME differential_tests 
+                     COMMAND ${VALGRIND_EXECUTABLE} 
+                             ${MEMORYCHECK_COMMAND_OPTIONS}
+                             ${LAKE_EXECUTABLE} exe project-verification
+                     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/lean)
+        else()
+            add_test(NAME differential_tests 
+                     COMMAND ${LAKE_EXECUTABLE} exe project-verification
+                     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/lean)
+        endif()
+    endif()
+endif()

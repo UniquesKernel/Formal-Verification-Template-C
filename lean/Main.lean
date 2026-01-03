@@ -1,7 +1,7 @@
-import AnvilVerification.ffi.CAddition
-import AnvilVerification.ffi.CppMultiplication
-import AnvilVerification.specs.Addition
-import AnvilVerification.specs.Multiplication
+import ProjectVerification.ffi.CAddition
+import ProjectVerification.ffi.CppMultiplication
+import ProjectVerification.specs.Addition
+import ProjectVerification.specs.Multiplication
 
 def main : IO Unit := do
   IO.println "We successfully called both the native lean and the foreign c version of add!"

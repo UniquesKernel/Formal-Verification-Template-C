@@ -4,8 +4,8 @@
 -- This module demonstrates property-based testing using the Plausible library
 -- to verify that our C implementation matches the Lean specification.
 
-import AnvilVerification.specs.Addition  -- Import our specification
-import AnvilVerification.ffi.CAddition   -- Import the C FFI binding
+import ProjectVerification.specs.Addition  -- Import our specification
+import ProjectVerification.ffi.CAddition   -- Import the C FFI binding
 import Plausible                         -- Property-based testing library (like QuickCheck)
 
 -- ============================================================================

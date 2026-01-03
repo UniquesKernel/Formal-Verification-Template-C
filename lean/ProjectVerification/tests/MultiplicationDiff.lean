@@ -4,8 +4,8 @@
 -- This module demonstrates property-based testing using the Plausible library
 -- to verify that our C++ implementation (with extern "C") matches the Lean specification.
 
-import AnvilVerification.specs.Multiplication  -- Import our specification
-import AnvilVerification.ffi.CppMultiplication -- Import the C++ FFI binding
+import ProjectVerification.specs.Multiplication  -- Import our specification
+import ProjectVerification.ffi.CppMultiplication -- Import the C++ FFI binding
 import Plausible                               -- Property-based testing library (like QuickCheck)
 
 -- ============================================================================

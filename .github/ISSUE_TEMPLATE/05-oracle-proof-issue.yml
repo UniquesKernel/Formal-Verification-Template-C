@@ -31,7 +31,7 @@ body:
       label: Affected Specification/Proof
       description: Which Lean file and definition is affected?
       placeholder: |
-        File: lean/AnvilVerification/Specs.lean
+        File: lean/ProjectVerification/Specs.lean
         Definition: my_function_oracle
     validations:
       required: true

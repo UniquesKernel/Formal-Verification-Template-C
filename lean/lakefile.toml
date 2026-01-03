@@ -1,15 +1,15 @@
-name = "anvil-verification"
+name = "project-verification"
 version = "0.1.0"
-defaultTargets = ["anvil-verification"]
+defaultTargets = ["project-verification"]
 moreLinkArgs = ["-L/home/woutan/template/build", "-lexample_lib",   "-Wl,-rpath,/home/woutan/template/build"]
 precompileModules = true
 supportInterpreter = true
 
 [[lean_lib]]
-name = "AnvilVerification"
+name = "ProjectVerification"
 
 [[lean_exe]]
-name = "anvil-verification"
+name = "project-verification"
 root = "Main"
 
 [[require]]
