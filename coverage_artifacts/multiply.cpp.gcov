@@ -1,9 +1,0 @@
-        -:    0:Source:/home/woutan/template/src/multiply.cpp
-        -:    0:Graph:CMakeFiles/example.dir/src/multiply.cpp.gcno
-        -:    0:Data:CMakeFiles/example.dir/src/multiply.cpp.gcda
-        -:    0:Runs:1
-        -:    1:#include "multiply.hpp"
-        -:    2:
-        1:    3:   uint32_t multiply(uint32_t a, uint32_t b) {
-        1:    4:        return a * b;
-        -:    5:    }
