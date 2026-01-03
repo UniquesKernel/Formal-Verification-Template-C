@@ -67,9 +67,9 @@ lake init "$PROJECT_NAME"
 cd .. 
 
 # Create additional folder structure in the project module directory
-echo "Creating folder structure (proof, spec, ffi, tests) in $MODULE_NAME/..."
+echo "Creating folder structure (proof, specs, ffi, tests) in $MODULE_NAME/..."
 mkdir -p "$PROJECT_DIR/$MODULE_NAME/proof"
-mkdir -p "$PROJECT_DIR/$MODULE_NAME/spec"
+mkdir -p "$PROJECT_DIR/$MODULE_NAME/specs"
 mkdir -p "$PROJECT_DIR/$MODULE_NAME/ffi"
 mkdir -p "$PROJECT_DIR/$MODULE_NAME/tests"
 
