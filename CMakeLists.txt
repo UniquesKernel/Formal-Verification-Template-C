@@ -10,7 +10,7 @@ option(PROJECT_BUILD_TESTS "Build the test suite" ON)
 option(PROJECT_ENABLE_COVERAGE "Enable code coverage reporting" OFF)
 
 # Sanitizer options
-option(PROJECT_ENABLE_ASAN "Enable Address Sanitizer" OFF) # Cannot be combined with TSAN and MSAN
+option(PROJECT_ENABLE_ASAN "Enable Address Sanitizer" OFF) 
 option(PROJECT_ENABLE_UBSAN "Enable Undefined Behavior Sanitizer" OFF)
 
 # Memory checking options
