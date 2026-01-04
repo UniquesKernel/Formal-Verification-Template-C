@@ -28,6 +28,8 @@ just as well for serious open-source or commercial code as it does for personal 
 
 ## Getting Started
 
+> **Note:** After cloning this template, update the `CODEOWNERS` file to replace `@UniquesKernel` with your own GitHub username or team.
+
 ### Quick Start
 
 1. **Build the C/C++ library and run basic tests:**

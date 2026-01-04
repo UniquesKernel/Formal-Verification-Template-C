@@ -42,10 +42,10 @@ debug:
 release:
 	@$(MAKE) BUILD_TYPE=Release build
 
-asan:
+asan: clean
 	@$(MAKE) CMAKE_OPTS="-DPROJECT_ENABLE_ASAN=ON" BUILD_TYPE=Debug build
 
-ubsan:
+ubsan: clean
 	@$(MAKE) CMAKE_OPTS="-DPROJECT_ENABLE_UBSAN=ON" BUILD_TYPE=Debug build
 
 coverage:
