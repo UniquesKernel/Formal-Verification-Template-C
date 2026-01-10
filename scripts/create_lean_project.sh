@@ -96,6 +96,19 @@ def main : IO Unit := do
   IO.println "Hello, World!"
 EOF
 
+cat >> "$PROJECT_DIR/lakefile.toml" << EOF
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+revision = "stable"
+
+[[require]]
+name = "plausible"
+scope = "leanprover-community"
+revision = "stable"
+EOF
+
 # removing the git artifacts after initialization
 rm -rf "$PROJECT_DIR/.github"
 
